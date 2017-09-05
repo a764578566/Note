@@ -1,0 +1,8 @@
+﻿
+<#+
+    public class config
+    {
+        public static readonly string ConnectionString="";
+        public static readonly string DbDatabase="";
+    }
+#>

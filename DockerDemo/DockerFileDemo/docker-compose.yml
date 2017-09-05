@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  dockerfiledemo:
+    image: dockerfiledemo
+    build:
+      context: ./DockerFileDemo
+      dockerfile: Dockerfile

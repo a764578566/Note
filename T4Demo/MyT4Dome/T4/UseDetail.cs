@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Domain.Entity
+{    
+	[Table("UseDetails")]
+	public class UseDetail : BaseEntity
+	{  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public Guid BillId { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public Guid ProductId { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public string Brand { get; set; }  
+		/// <summary>
+        /// 产品编号
+        /// </summary>        
+        public string ProductCode { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public string ProductName { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public string ProductCategory { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public string ProductSpecification { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public int Count { get; set; }  
+		/// <summary>
+        /// 
+        /// </summary>        
+        public int Price { get; set; }  
+		/// <summary>
+        /// 总金额
+        /// </summary>        
+        public int? Amount { get; set; }		
+    }
+}

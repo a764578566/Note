@@ -1,0 +1,59 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ include file="$(ProjectDir)DbHelper.t4" #>
+<#@ include file="$(ProjectDir)Manager.t4" #>
+<#@ include file="$(ProjectDir)config.t4" #>
+
+<#
+	var manager = Manager.Create(Host, GenerationEnvironment);
+	var tables = DbHelper.GetDbTables(config.ConnectionString, config.DbDatabase);
+    foreach(var table in tables)
+	{
+	var tablename = table.TableName.Substring(0, table.TableName.Length - 1);
+	 if(table.TableName.Contains("Map"))
+	 {
+		tablename = table.TableName;
+	 }
+   manager.StartNewFile(tablename + ".cs");
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Domain.Entity
+{    
+	[Table("<#=table.TableName#>")]
+	<# var list=DbHelper.GetDbColumns(config.ConnectionString, config.DbDatabase, table.TableName);
+	if(!list.Exists(n => n.ColumnName == "OrgId")){#>
+public class <#=tablename#> : BaseEntity<#}else{#>
+public class <#=tablename#> : ChainEntity<#}#>
+
+	{<# 
+		foreach(DbColumn column in list){
+		if(!(column.ColumnName=="Id"||column.ColumnName=="Enabled"||column.ColumnName=="DisplayOrder"||column.ColumnName=="Deleted"||column.ColumnName=="UpdatedOnUtc"||
+		column.ColumnName=="CreatedOnUtc"||column.ColumnName=="Description"|| column.ColumnName == "OrgId"||
+		column.ColumnName=="CreatedUser"||column.ColumnName=="ModifiedUser"|| column.ColumnName == "ModifiedReason"
+		)){
+	#>  
+		/// <summary>
+        /// <#=column.Remark.Replace("\r\n"," ")#>
+        /// </summary>        
+        public <#= column.CSharpType#><# if(column.CommonType.IsValueType && column.IsNullable){#>?<#}#> <#=column.ColumnName#> { get; set; }<#}#><#}#>
+		
+    }
+}
+<#
+	 manager.EndBlock(); 
+	}
+	 manager.Process(true);
+#>
